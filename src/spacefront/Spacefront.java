@@ -41,7 +41,7 @@ public class Spacefront extends Observable implements Runnable, MouseListener {
         while (home < HOME_MAX) {
             synchronized (this) {
                 if (RNG.nextFloat() < 0.02) {
-                    double d = SIDE * 0.75;
+                    double d = SIDE / 2d * Math.sqrt(2);
                     double a = RNG.nextDouble() * Math.PI * 2;
                     double x = Math.cos(a) * d;
                     double y = Math.sin(a) * d;

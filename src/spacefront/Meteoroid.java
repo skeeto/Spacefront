@@ -17,6 +17,7 @@ public class Meteoroid extends Path2D.Double {
 
     private double x, dx;
     private double y, dy;
+    private double a, da;
 
     public Meteoroid(double startx, double starty) {
         super();
@@ -42,11 +43,13 @@ public class Meteoroid extends Path2D.Double {
         double a = Math.atan2(starty, startx);
         dx = -Math.cos(a) * speed;
         dy = -Math.sin(a) * speed;
+        da = RNG.nextGaussian() * 0.05;
     }
 
     public boolean step(double home) {
         x += dx;
         y += dy;
+        a += da;
         double home2 = home * home;
         int count = edges.size();
         for (int i = 0; i < count; i++) {
@@ -62,7 +65,9 @@ public class Meteoroid extends Path2D.Double {
     }
 
     public Shape get() {
-        AffineTransform at = AffineTransform.getTranslateInstance(x, y);
+        AffineTransform at = new AffineTransform();
+        at.translate(x, y);
+        at.rotate(a);
         return at.createTransformedShape(this);
     }
 }

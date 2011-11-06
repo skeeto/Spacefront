@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class Shot {
 
-    private static final double SIZE = 10;
+    private static final double SIZE = 8;
     private static final Shape SHAPE
         = new Ellipse2D.Double(-SIZE / 2, -SIZE / 2, SIZE, SIZE);
 

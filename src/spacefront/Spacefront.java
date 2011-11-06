@@ -3,13 +3,15 @@ package spacefront;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Set;
 import javax.swing.JFrame;
 
-public class Spacefront extends Observable implements Runnable, MouseListener {
+public class Spacefront extends Observable
+    implements Runnable, MouseListener, MouseMotionListener {
 
     private static final Random RNG = new Random();
     private static final long DELAY = 33;
@@ -17,14 +19,20 @@ public class Spacefront extends Observable implements Runnable, MouseListener {
     private static final Dimension SIZE = new Dimension(SIDE, SIDE);
     private static final double HOME_MAX = SIDE / 2;
 
-    private Set<Meteoroid> meteoroids = new HashSet<Meteoroid>();
-    private Set<Shot> shots = new HashSet<Shot>();
+    private static final long FIRE_DELAY = 200;
 
     public static void main(String[] args) {
         new Thread(new Spacefront()).start();
     }
 
+    private Set<Meteoroid> meteoroids = new HashSet<Meteoroid>();
+    private Set<Shot> shots = new HashSet<Shot>();
+
     private double home = 25;
+
+    private long lastFire;
+    private boolean firing;
+    private double fireX, fireY;
 
     public Spacefront() {
         JFrame frame = new JFrame("Spacefront");
@@ -34,12 +42,24 @@ public class Spacefront extends Observable implements Runnable, MouseListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         panel.addMouseListener(this);
+        panel.addMouseMotionListener(this);
     }
 
     @Override
     public void run() {
         while (home < HOME_MAX) {
             synchronized (this) {
+                if (firing) {
+                    long now = System.currentTimeMillis();
+                    long diff = now - lastFire;
+                    if (diff >= FIRE_DELAY) {
+                        double x = fireX - SIDE / 2;
+                        double y = fireY - SIDE / 2;
+                        shots.add(new Shot(x, y));
+                        lastFire = now;
+                    }
+                }
+
                 if (RNG.nextFloat() < 0.02) {
                     double d = SIDE / 2d * Math.sqrt(2);
                     double a = RNG.nextDouble() * Math.PI * 2;
@@ -113,16 +133,29 @@ public class Spacefront extends Observable implements Runnable, MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        firing = false;
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        firing = true;
+        fireX = e.getX();
+        fireY = e.getY();
     }
 
     @Override
-    public synchronized void mouseClicked(MouseEvent e) {
-        double x = e.getX() - SIDE / 2;
-        double y = e.getY() - SIDE / 2;
-        shots.add(new Shot(x, y));
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        fireX = e.getX();
+        fireY = e.getY();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        fireX = e.getX();
+        fireY = e.getY();
     }
 }

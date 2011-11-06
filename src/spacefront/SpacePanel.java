@@ -38,9 +38,11 @@ public class SpacePanel extends JComponent implements Observer {
 
     public void setSpacefront(Spacefront space) {
         this.space = space;
-        setPreferredSize(space.getSize());
-        setMinimumSize(space.getSize());
-        space.addObserver(this);
+        if (space != null) {
+            setPreferredSize(space.getSize());
+            //setMinimumSize(space.getSize());
+            space.addObserver(this);
+        }
     }
 
     public Spacefront getSpacefront() {

@@ -6,24 +6,32 @@ import javax.swing.JFrame;
 
 public class Launcher implements MouseListener {
 
-    private static JFrame frame;
-    private static SpacePanel panel;
-    private static DemoController demo;
+    private static final long serialVersionUID = 1L;
 
     public static void main(String[] args) {
+        /* Prepare a demo game for behind the menu. */
         Spacefront spacefront = new Spacefront();
-        panel = new SpacePanel(spacefront);
-        frame = new JFrame("Spacefront");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        DemoController demo = new DemoController(spacefront, 0.9);
+        new Thread(spacefront).start();
+
+        /* Prepare GUI. */
+        SpacePanel panel = new SpacePanel(spacefront);
+        JFrame frame = new JFrame("Spacefront");
         frame.setResizable(false);
         frame.add(panel);
         frame.pack();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        panel.addMouseListener(new Launcher());
+        new Launcher(panel, demo);
+    }
 
-        /* Start a demo game behind the menu. */
-        demo = new DemoController(spacefront, 0.9);
-        new Thread(spacefront).start();
+    private DemoController demo;
+    private SpacePanel panel;
+
+    public Launcher(SpacePanel panel, DemoController demo) {
+        this.panel = panel;
+        this.demo = demo;
+        panel.addMouseListener(this);
     }
 
     @Override

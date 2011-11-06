@@ -39,6 +39,7 @@
         <attribute name="Main-Class" value="${main.class}"/>
       </manifest>
     </jar>
+    <copy file="applet.html" tofile="${dist.dir}/index.html"/>
   </target>
 
   <target name="run" depends="compile"
@@ -74,5 +75,11 @@
       <fileset dir="${src.dir}" includes="**/*.java"/>
       <fileset dir="${test.dir}" includes="**/*.java"/>
     </apply>
+  </target>
+
+  <target name="applet" depends="jar" description="Run the applet version.">
+    <exec executable="appletviewer">
+      <arg value="${dist.dir}/index.html"/>
+    </exec>
   </target>
 </project>

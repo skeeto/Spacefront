@@ -27,6 +27,7 @@ public class Spacefront extends Observable
 
     private Set<Meteoroid> meteoroids = new HashSet<Meteoroid>();
     private Set<Shot> shots = new HashSet<Shot>();
+    private Set<Debris> debris = new HashSet<Debris>();
 
     private double home = 25;
 
@@ -73,7 +74,14 @@ public class Spacefront extends Observable
                 }
                 Set<Meteoroid> dead = new HashSet<Meteoroid>();
                 Set<Shot> spent = new HashSet<Shot>();
+                Set<Debris> old = new HashSet<Debris>();
                 int hits = 0;
+                for (Debris d : debris) {
+                    d.step();
+                    if (d.getTTL() <= 0f) {
+                        old.add(d);
+                    }
+                }
                 for (Meteoroid m : meteoroids) {
                     if (m.step(home)) {
                         hits++;
@@ -85,13 +93,14 @@ public class Spacefront extends Observable
                     if (m != null) {
                         dead.add(m);
                         spent.add(s);
-
+                        debris.addAll(m.breakup());
                     } else if (s.getDistance() > SIDE) {
                         spent.add(s);
                     }
                 }
                 meteoroids.removeAll(dead);
                 shots.removeAll(spent);
+                debris.removeAll(old);
                 home *= 1d + hits / 10d;
             }
             setChanged();
@@ -123,6 +132,10 @@ public class Spacefront extends Observable
 
     public synchronized Set<Shot> getShots() {
         return new HashSet<Shot>(shots);
+    }
+
+    public synchronized Set<Debris> getDebris() {
+        return new HashSet<Debris>(debris);
     }
 
     @Override

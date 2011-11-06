@@ -5,7 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.util.Set;
 
-public class Shot {
+public class Shot extends SpaceObject {
 
     private static final double SIZE = 8;
     private static final Shape SHAPE
@@ -15,33 +15,20 @@ public class Shot {
 
     private static final double SPEED = 8;
 
-    private double x, dx, y, dy;
-
     public Shot(double destx, double desty) {
+        super(0, 0, 0);
         double a = Math.atan2(desty, destx);
-        x = 0;
-        y = 0;
-        dx = Math.cos(a) * SPEED;
-        dy = Math.sin(a) * SPEED;
+        setSpeed(Math.cos(a) * SPEED, Math.sin(a) * SPEED, 0);
+        setShape(SHAPE);
     }
 
     public Meteoroid step(Set<Meteoroid> targets) {
-        x += dx;
-        y += dy;
+        super.step();
         for (Meteoroid m : targets) {
-            if (m.get().contains(x, y)) {
+            if (m.get().contains(getX(), getY())) {
                 return m;
             }
         }
         return null;
-    }
-
-    public double getDistance() {
-        return Math.sqrt(x * x + y * y);
-    }
-
-    public Shape get() {
-        AffineTransform at = AffineTransform.getTranslateInstance(x, y);
-        return at.createTransformedShape(SHAPE);
     }
 }

@@ -58,7 +58,14 @@ public class SpacePanel extends JComponent implements Observer {
             g.fill(s.get());
         }
 
+        /* Meteoroid-drawing. */
         g.setStroke(new BasicStroke(2));
+        for (Debris d : space.getDebris()) {
+            g.setColor(new Color(1f, 1f, 1f, d.getTTL()));
+            g.draw(d.get());
+        }
+
+        g.setColor(Color.WHITE);
         for (Meteoroid m : space.getMeteoroids()) {
             g.setColor(Color.BLACK);
             g.fill(m.get());

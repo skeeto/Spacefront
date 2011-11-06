@@ -1,13 +1,15 @@
 package spacefront;
 
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Set;
 import javax.swing.JFrame;
 
-public class Spacefront extends Observable implements Runnable {
+public class Spacefront extends Observable implements Runnable, MouseListener {
 
     private static final Random RNG = new Random();
     private static final long DELAY = 33;
@@ -29,6 +31,7 @@ public class Spacefront extends Observable implements Runnable {
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        panel.addMouseListener(this);
     }
 
     @Override
@@ -79,5 +82,25 @@ public class Spacefront extends Observable implements Runnable {
 
     public synchronized Set<Meteoroid> getMeteoroids() {
         return new HashSet<Meteoroid>(meteoroids);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
     }
 }

@@ -27,7 +27,7 @@ public class Spacefront extends Observable implements Runnable {
         frame.pack();
         frame.setVisible(true);
         new Controller(spacefront, panel);
-        //new DemoController(spacefront);
+        //new DemoController(spacefront, 0.9);
         new Thread(spacefront).start();
     }
 

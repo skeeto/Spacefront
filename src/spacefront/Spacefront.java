@@ -41,6 +41,7 @@ public class Spacefront extends Observable
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        frame.setResizable(false);
         panel.addMouseListener(this);
         panel.addMouseMotionListener(this);
     }

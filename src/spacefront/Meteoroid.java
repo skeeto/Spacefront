@@ -1,5 +1,7 @@
 package spacefront;
 
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,19 +61,8 @@ public class Meteoroid extends Path2D.Double {
         return false;
     }
 
-    public double getX() {
-        return x;
-    }
-
-    public double getDX() {
-        return dx;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public double getDY() {
-        return dy;
+    public Shape get() {
+        AffineTransform at = AffineTransform.getTranslateInstance(x, y);
+        return at.createTransformedShape(this);
     }
 }

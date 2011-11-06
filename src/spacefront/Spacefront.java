@@ -13,10 +13,12 @@ public class Spacefront extends Observable implements Runnable, MouseListener {
 
     private static final Random RNG = new Random();
     private static final long DELAY = 33;
-    private static final Dimension SIZE = new Dimension(600, 600);
-    private static final double HOME_MAX = 300;
+    private static final int SIDE = 600;
+    private static final Dimension SIZE = new Dimension(SIDE, SIDE);
+    private static final double HOME_MAX = SIDE / 2;
 
     private Set<Meteoroid> meteoroids = new HashSet<Meteoroid>();
+    private Set<Shot> shots = new HashSet<Shot>();
 
     public static void main(String[] args) {
         new Thread(new Spacefront()).start();
@@ -38,14 +40,15 @@ public class Spacefront extends Observable implements Runnable, MouseListener {
     public void run() {
         while (home < HOME_MAX) {
             synchronized (this) {
-                if (RNG.nextFloat() < 0.2) {
-                    double d = SIZE.getWidth() * 0.75;
+                if (RNG.nextFloat() < 0.02) {
+                    double d = SIDE * 0.75;
                     double a = RNG.nextDouble() * Math.PI * 2;
                     double x = Math.cos(a) * d;
                     double y = Math.sin(a) * d;
                     meteoroids.add(new Meteoroid(x, y));
                 }
                 Set<Meteoroid> dead = new HashSet<Meteoroid>();
+                Set<Shot> spent = new HashSet<Shot>();
                 int hits = 0;
                 for (Meteoroid m : meteoroids) {
                     if (m.step(home)) {
@@ -54,7 +57,19 @@ public class Spacefront extends Observable implements Runnable, MouseListener {
                         dead.add(m);
                     }
                 }
+                for (Shot s : shots) {
+                    Meteoroid m = s.step(meteoroids);
+                    if (m != null) {
+                        System.out.println("KILL!!!");
+                        dead.add(m);
+                        spent.add(s);
+
+                    } else if (s.getDistance() > SIDE) {
+                        spent.add(s);
+                    }
+                }
                 meteoroids.removeAll(dead);
+                shots.removeAll(spent);
                 home *= 1d + hits / 10d;
             }
             setChanged();
@@ -84,6 +99,10 @@ public class Spacefront extends Observable implements Runnable, MouseListener {
         return new HashSet<Meteoroid>(meteoroids);
     }
 
+    public synchronized Set<Shot> getShots() {
+        return new HashSet<Shot>(shots);
+    }
+
     @Override
     public void mouseExited(MouseEvent e) {
     }
@@ -101,6 +120,9 @@ public class Spacefront extends Observable implements Runnable, MouseListener {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public synchronized void mouseClicked(MouseEvent e) {
+        double x = e.getX() - SIDE / 2;
+        double y = e.getY() - SIDE / 2;
+        shots.add(new Shot(x, y));
     }
 }

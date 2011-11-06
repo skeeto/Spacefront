@@ -37,6 +37,8 @@ public class SpacePanel extends JComponent implements Observer {
         Graphics2D g = (Graphics2D) graphics;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                            RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
+                           RenderingHints.VALUE_STROKE_PURE);
         g.translate(getWidth() / 2, getHeight() / 2);
         double size = space.getHomeSize();
         Shape home = new Ellipse2D.Double(-size, -size, size * 2, size * 2);
@@ -46,10 +48,12 @@ public class SpacePanel extends JComponent implements Observer {
         g.setColor(Color.WHITE);
         g.setStroke(new BasicStroke(2));
         for (Meteoroid m : space.getMeteoroids()) {
-            double x = m.getX();
-            double y = m.getY();
-            AffineTransform at = AffineTransform.getTranslateInstance(x, y);
-            g.draw(at.createTransformedShape(m));
+            g.draw(m.get());
+        }
+
+        g.setColor(Color.RED);
+        for (Shot s : space.getShots()) {
+            g.fill(s.get());
         }
     }
 }

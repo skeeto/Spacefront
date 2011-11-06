@@ -16,17 +16,19 @@ public class Meteoroid extends SpaceObject {
 
     List<java.lang.Double> edges = new ArrayList<java.lang.Double>();
 
+    private double size;
+
     public Meteoroid(double startx, double starty) {
         super(startx, starty, 0);
         Path2D.Double shape = new Path2D.Double();
         int count = RNG.nextInt(10) + 10;
-        double mean = RNG.nextGaussian() * 10 + 20;
-        mean = Math.max(mean, 10);
+        size = RNG.nextGaussian() * 10 + 20;
+        size = Math.max(size, 10);
 
         /* Build up edges. */
         boolean first = true;
         for (int i = 0; i < count; i++) {
-            double d = RNG.nextGaussian() * (mean / 5) + mean;
+            double d = RNG.nextGaussian() * (size / 5) + size;
             double a = i * (Math.PI * 2d / count);
             edges.add(d);
             double px = Math.cos(a) * d;
@@ -49,16 +51,20 @@ public class Meteoroid extends SpaceObject {
         setSpeed(dx, dy, da);
     }
 
-    public boolean step(double home) {
+    public double getSize() {
+        return size;
+    }
+
+    public boolean step(Planet home) {
         super.step();
-        double home2 = home * home;
+        double radius2 = Math.pow(home.getRadius(), 2);
         int count = edges.size();
         for (int i = 0; i < count; i++) {
             double a = i * (Math.PI * 2d / count);
             double d = edges.get(i);
             double px = Math.cos(a) * d + getX();
             double py = Math.sin(a) * d + getY();
-            if (px * px + py * py < home2) {
+            if (px * px + py * py < radius2) {
                 return true;
             }
         }

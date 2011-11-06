@@ -73,20 +73,12 @@ public class SpacePanel extends JComponent implements Observer {
                            RenderingHints.VALUE_STROKE_PURE);
         g.translate(getWidth() / 2, getHeight() / 2);
 
-        /* Draw the home planet. */
-        double size;
-        if (space != null) {
-            size = space.getHomeSize();
-        } else {
-            size = 75;
-        }
-        Shape home = new Ellipse2D.Double(-size, -size, size * 2, size * 2);
-        g.setColor(Color.GREEN);
-        g.fill(home);
-
         if (space == null) {
             return;
         }
+
+        /* Draw the home planet. */
+        space.getHome().paint(g);
 
         /* Draw rounds fired by the player. */
         g.setColor(Color.RED);

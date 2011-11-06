@@ -12,7 +12,6 @@ public class Spacefront extends Observable implements Runnable {
     private static final long DELAY = 33;
     private static final int SIDE = 600;
     private static final Dimension SIZE = new Dimension(SIDE, SIDE);
-    private static final double HOME_MAX = SIDE / 2;
 
     private static final long FIRE_DELAY = 200;
 
@@ -20,7 +19,7 @@ public class Spacefront extends Observable implements Runnable {
     private Set<Shot> shots = new HashSet<Shot>();
     private Set<Debris> debris = new HashSet<Debris>();
 
-    private double home = 25;
+    private Planet home = new Planet();
 
     private long lastFire;
     private boolean firing = false;
@@ -57,7 +56,6 @@ public class Spacefront extends Observable implements Runnable {
                 Set<Meteoroid> dead = new HashSet<Meteoroid>();
                 Set<Shot> spent = new HashSet<Shot>();
                 Set<Debris> old = new HashSet<Debris>();
-                int hits = 0;
                 for (Debris d : debris) {
                     d.step();
                     if (d.getTTL() <= 0f) {
@@ -66,8 +64,8 @@ public class Spacefront extends Observable implements Runnable {
                 }
                 for (Meteoroid m : meteoroids) {
                     if (m.step(home)) {
-                        hits++;
                         dead.add(m);
+                        home.absorb(m);
                     }
                 }
                 for (Shot s : shots) {
@@ -83,10 +81,9 @@ public class Spacefront extends Observable implements Runnable {
                 meteoroids.removeAll(dead);
                 shots.removeAll(spent);
                 debris.removeAll(old);
-                home *= 1d + hits / 10d;
-                if (home > HOME_MAX) {
-                    running = false;
+                if (home.getHealth() <= 0) {
                     System.out.println("Game over");
+                    running = false;
                     meteoroids.clear();
                     shots.clear();
                     debris.clear();
@@ -110,7 +107,7 @@ public class Spacefront extends Observable implements Runnable {
         return SIZE;
     }
 
-    public double getHomeSize() {
+    public Planet getHome() {
         return home;
     }
 

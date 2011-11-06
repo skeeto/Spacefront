@@ -1,17 +1,13 @@
 package spacefront;
 
 import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Set;
 import javax.swing.JFrame;
 
-public class Spacefront extends Observable
-    implements Runnable, MouseListener, MouseMotionListener {
+public class Spacefront extends Observable implements Runnable {
 
     private static final Random RNG = new Random();
     private static final long DELAY = 33;
@@ -22,7 +18,17 @@ public class Spacefront extends Observable
     private static final long FIRE_DELAY = 200;
 
     public static void main(String[] args) {
-        new Thread(new Spacefront()).start();
+        Spacefront spacefront = new Spacefront();
+        SpacePanel panel = new SpacePanel(spacefront);
+        JFrame frame = new JFrame("Spacefront");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.add(panel);
+        frame.pack();
+        frame.setVisible(true);
+        new Controller(spacefront, panel);
+        //new DemoController(spacefront);
+        new Thread(spacefront).start();
     }
 
     private Set<Meteoroid> meteoroids = new HashSet<Meteoroid>();
@@ -32,21 +38,12 @@ public class Spacefront extends Observable
     private double home = 25;
 
     private long lastFire;
-    private boolean firing;
+    private boolean firing = false;
     private double fireX, fireY;
     private double danger = 0.05;
     private double difficulty = 0.00001;
 
     public Spacefront() {
-        JFrame frame = new JFrame("Spacefront");
-        SpacePanel panel = new SpacePanel(this);
-        frame.add(panel);
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        frame.setResizable(false);
-        panel.addMouseListener(this);
-        panel.addMouseMotionListener(this);
     }
 
     @Override
@@ -57,9 +54,7 @@ public class Spacefront extends Observable
                     long now = System.currentTimeMillis();
                     long diff = now - lastFire;
                     if (diff >= FIRE_DELAY) {
-                        double x = fireX - SIDE / 2;
-                        double y = fireY - SIDE / 2;
-                        shots.add(new Shot(x, y));
+                        shots.add(new Shot(fireX, fireY));
                         lastFire = now;
                     }
                 }
@@ -138,39 +133,14 @@ public class Spacefront extends Observable
         return new HashSet<Debris>(debris);
     }
 
-    @Override
-    public void mouseExited(MouseEvent e) {
+    public void fireXY(double x, double y) {
+        if (firing) {
+            fireX = x;
+            fireY = y;
+        }
     }
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        firing = false;
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        firing = true;
-        fireX = e.getX();
-        fireY = e.getY();
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        fireX = e.getX();
-        fireY = e.getY();
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        fireX = e.getX();
-        fireY = e.getY();
+    public void fire(boolean enabled) {
+        firing = enabled;
     }
 }

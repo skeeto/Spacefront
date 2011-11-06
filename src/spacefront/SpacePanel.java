@@ -78,7 +78,7 @@ public class SpacePanel extends JComponent implements Observer {
         }
 
         /* Draw the home planet. */
-        space.getHome().paint(g);
+        space.getHome().paint((Graphics2D) g.create());
 
         /* Draw rounds fired by the player. */
         g.setColor(Color.RED);

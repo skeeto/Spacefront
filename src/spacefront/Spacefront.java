@@ -33,6 +33,8 @@ public class Spacefront extends Observable
     private long lastFire;
     private boolean firing;
     private double fireX, fireY;
+    private double danger = 0.05;
+    private double difficulty = 0.00001;
 
     public Spacefront() {
         JFrame frame = new JFrame("Spacefront");
@@ -61,7 +63,8 @@ public class Spacefront extends Observable
                     }
                 }
 
-                if (RNG.nextFloat() < 0.02) {
+                danger += difficulty;
+                if (RNG.nextFloat() < danger) {
                     double d = SIDE / 2d * Math.sqrt(2);
                     double a = RNG.nextDouble() * Math.PI * 2;
                     double x = Math.cos(a) * d;
@@ -73,7 +76,6 @@ public class Spacefront extends Observable
                 int hits = 0;
                 for (Meteoroid m : meteoroids) {
                     if (m.step(home)) {
-                        System.out.println("HIT!!!");
                         hits++;
                         dead.add(m);
                     }
@@ -81,7 +83,6 @@ public class Spacefront extends Observable
                 for (Shot s : shots) {
                     Meteoroid m = s.step(meteoroids);
                     if (m != null) {
-                        System.out.println("KILL!!!");
                         dead.add(m);
                         spent.add(s);
 

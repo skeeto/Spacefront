@@ -17,6 +17,9 @@ public class SpacePanel extends JComponent implements Observer {
 
     private static final long serialVersionUID = 1L;
 
+    private static final Color METEOROID_FILL = Color.DARK_GRAY;
+    private static final Color METEOROID_OUTLINE = Color.LIGHT_GRAY;
+
     private static final int STAR_COUNT = 100;
     private static final Color[] STAR_COLORS = {
         Color.WHITE, Color.GRAY, Color.LIGHT_GRAY
@@ -61,17 +64,24 @@ public class SpacePanel extends JComponent implements Observer {
         /* Meteoroid-drawing. */
         g.setStroke(new BasicStroke(2));
         for (Debris d : space.getDebris()) {
-            g.setColor(new Color(1f, 1f, 1f, d.getTTL()));
+            g.setColor(derive(METEOROID_OUTLINE, d.getTTL()));
             g.draw(d.get());
         }
 
         g.setColor(Color.WHITE);
         for (Meteoroid m : space.getMeteoroids()) {
-            g.setColor(Color.BLACK);
+            g.setColor(METEOROID_FILL);
             g.fill(m.get());
-            g.setColor(Color.WHITE);
+            g.setColor(METEOROID_OUTLINE);
             g.draw(m.get());
         }
+    }
+
+    private Color derive(Color c, float alpha) {
+        return new Color(c.getRed() / 255f,
+                         c.getGreen() / 255f,
+                         c.getBlue() / 255f,
+                         alpha);
     }
 
     private void paintStars(Graphics g) {

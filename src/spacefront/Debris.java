@@ -24,6 +24,7 @@ public class Debris extends SpaceObject {
 
     public float getTTL() {
         ttl--;
-        return Math.min(1f, Math.max(0f, ttl * 1f / maxttl));
+        float clamped = Math.min(1f, Math.max(0f, ttl * 1f / maxttl));
+        return (float) Math.sqrt(clamped);
     }
 }

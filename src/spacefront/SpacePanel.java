@@ -112,6 +112,10 @@ public class SpacePanel extends JComponent implements Observer {
         g.setTransform(original);
         if (showTitle) {
             paintTitle(g);
+        } else if (!space.isRunning()) {
+            g.setColor(Color.WHITE);
+            g.setFont(g.getFont().deriveFont(Font.BOLD, 50f));
+            paintTitle(g, "Game Over", 200);
         }
     }
 

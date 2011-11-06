@@ -87,6 +87,9 @@ public class Spacefront extends Observable implements Runnable {
                 if (home > HOME_MAX) {
                     running = false;
                     System.out.println("Game over");
+                    meteoroids.clear();
+                    shots.clear();
+                    debris.clear();
                 }
             }
             setChanged();
@@ -136,5 +139,9 @@ public class Spacefront extends Observable implements Runnable {
 
     public void stop() {
         running = false;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

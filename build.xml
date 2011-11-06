@@ -3,7 +3,7 @@
 
   <!-- Project-specific configuration -->
   <property name="package.main" value="spacefront"/>
-  <property name="main.class" value="${package.main}.${ant.project.name}"/>
+  <property name="main.class" value="${package.main}.Launcher"/>
   <property name="jar.file" value="${ant.project.name}.jar"/>
 
   <!-- Standard Directory Layout -->

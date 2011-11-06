@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Set;
-import javax.swing.JFrame;
 
 public class Spacefront extends Observable implements Runnable {
 
@@ -16,20 +15,6 @@ public class Spacefront extends Observable implements Runnable {
     private static final double HOME_MAX = SIDE / 2;
 
     private static final long FIRE_DELAY = 200;
-
-    public static void main(String[] args) {
-        Spacefront spacefront = new Spacefront();
-        SpacePanel panel = new SpacePanel(spacefront);
-        JFrame frame = new JFrame("Spacefront");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.add(panel);
-        frame.pack();
-        frame.setVisible(true);
-        new Controller(spacefront, panel);
-        //new DemoController(spacefront, 0.9);
-        new Thread(spacefront).start();
-    }
 
     private Set<Meteoroid> meteoroids = new HashSet<Meteoroid>();
     private Set<Shot> shots = new HashSet<Shot>();
@@ -42,13 +27,15 @@ public class Spacefront extends Observable implements Runnable {
     private double fireX, fireY;
     private double danger = 0.05;
     private double difficulty = 0.00001;
+    private boolean running = false;
 
     public Spacefront() {
     }
 
     @Override
     public void run() {
-        while (home < HOME_MAX) {
+        running = true;
+        while (running) {
             synchronized (this) {
                 if (firing) {
                     long now = System.currentTimeMillis();
@@ -97,12 +84,15 @@ public class Spacefront extends Observable implements Runnable {
                 shots.removeAll(spent);
                 debris.removeAll(old);
                 home *= 1d + hits / 10d;
+                if (home > HOME_MAX) {
+                    running = false;
+                    System.out.println("Game over");
+                }
             }
             setChanged();
             notifyObservers();
             sleep(DELAY);
         }
-        System.out.println("Game over");
     }
 
     private void sleep(long ms) {
@@ -142,5 +132,9 @@ public class Spacefront extends Observable implements Runnable {
 
     public void fire(boolean enabled) {
         firing = enabled;
+    }
+
+    public void stop() {
+        running = false;
     }
 }

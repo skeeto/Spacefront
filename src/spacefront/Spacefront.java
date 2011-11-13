@@ -21,6 +21,7 @@ public class Spacefront extends Observable implements Runnable {
 
     private Planet home = new Planet();
 
+    private Weapon weapon = new BasicWeapon();
     private long lastFire;
     private boolean firing = false;
     private double fireX, fireY;
@@ -40,7 +41,7 @@ public class Spacefront extends Observable implements Runnable {
                     long now = System.currentTimeMillis();
                     long diff = now - lastFire;
                     if (diff >= FIRE_DELAY) {
-                        shots.add(new Shot(fireX, fireY));
+                        shots.add(weapon.fire(fireX, fireY));
                         lastFire = now;
                     }
                 }

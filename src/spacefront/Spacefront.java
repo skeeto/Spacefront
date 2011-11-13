@@ -3,8 +3,10 @@ package spacefront;
 import java.awt.Dimension;
 import java.util.HashSet;
 import java.util.Observable;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Spacefront extends Observable implements Runnable {
 
@@ -18,6 +20,11 @@ public class Spacefront extends Observable implements Runnable {
     private Set<Meteoroid> meteoroids = new HashSet<Meteoroid>();
     private Set<Shot> shots = new HashSet<Shot>();
     private Set<Debris> debris = new HashSet<Debris>();
+
+    private Queue<SpaceObject> incoming =
+        new ConcurrentLinkedQueue<SpaceObject>();
+    private Queue<SpaceObject> outgoing =
+        new ConcurrentLinkedQueue<SpaceObject>();
 
     private Planet home = new Planet();
 
@@ -82,6 +89,26 @@ public class Spacefront extends Observable implements Runnable {
                 meteoroids.removeAll(dead);
                 shots.removeAll(spent);
                 debris.removeAll(old);
+                while (outgoing.peek() != null) {
+                    SpaceObject o = outgoing.poll();
+                    if (o instanceof Shot) {
+                        shots.remove((Shot) o);
+                    } else if (o instanceof Meteoroid) {
+                        meteoroids.remove((Meteoroid) o);
+                    } else if (o instanceof Debris) {
+                        debris.remove((Debris) o);
+                    }
+                }
+                while (incoming.peek() != null) {
+                    SpaceObject o = incoming.poll();
+                    if (o instanceof Shot) {
+                        shots.add((Shot) o);
+                    } else if (o instanceof Meteoroid) {
+                        meteoroids.add((Meteoroid) o);
+                    } else if (o instanceof Debris) {
+                        debris.add((Debris) o);
+                    }
+                }
                 if (home.getHealth() <= 0) {
                     System.out.println("Game over");
                     running = false;
@@ -122,6 +149,14 @@ public class Spacefront extends Observable implements Runnable {
 
     public synchronized Set<Debris> getDebris() {
         return new HashSet<Debris>(debris);
+    }
+
+    public void addObject(SpaceObject o) {
+        incoming.add(o);
+    }
+
+    public void removeObject(SpaceObject o) {
+        outgoing.add(o);
     }
 
     public void fireXY(double x, double y) {

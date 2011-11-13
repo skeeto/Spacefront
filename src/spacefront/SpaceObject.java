@@ -62,15 +62,23 @@ public abstract class SpaceObject {
     }
 
     public Shape get() {
+        return getTransform().createTransformedShape(shape);
+    }
+
+    public AffineTransform getTransform() {
         AffineTransform at = new AffineTransform();
         at.translate(x, y);
         at.rotate(a);
-        return at.createTransformedShape(shape);
+        return at;
+    }
+
+    public Shape getShape() {
+        return shape;
+    }
+
+    protected void setShape(Shape shape) {
+        this.shape = shape;
     }
 
     public abstract void paint(Graphics2D g);
-
-    public void setShape(Shape shape) {
-        this.shape = shape;
-    }
 }

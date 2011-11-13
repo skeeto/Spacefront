@@ -77,7 +77,7 @@ public class Spacefront extends Observable implements Runnable {
                     }
                 }
                 for (Shot s : shots) {
-                    Meteoroid m = s.step(meteoroids);
+                    Meteoroid m = s.step(this);
                     if (m != null) {
                         dead.add(m);
                         spent.add(s);

@@ -21,8 +21,8 @@ public abstract class Shot extends SpaceObject {
         return null;
     }
 
-    public Meteoroid step(Set<Meteoroid> targets) {
+    public Meteoroid step(Spacefront universe) {
         super.step();
-        return hit(targets);
+        return hit(universe.getMeteoroids());
     }
 }

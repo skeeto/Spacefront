@@ -1,5 +1,7 @@
 package spacefront;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -13,6 +15,9 @@ public class Meteoroid extends SpaceObject {
     private static final long serialVersionUID = 1L;
 
     private static final Random RNG = new Random();
+
+    public static final Color METEOROID_FILL = Color.DARK_GRAY;
+    public static final Color METEOROID_OUTLINE = Color.LIGHT_GRAY;
 
     List<java.lang.Double> edges = new ArrayList<java.lang.Double>();
 
@@ -92,5 +97,11 @@ public class Meteoroid extends SpaceObject {
         return parts;
     }
 
-
+    public void paint(Graphics2D g) {
+        Shape self = get();
+        g.setColor(METEOROID_FILL);
+        g.fill(self);
+        g.setColor(METEOROID_OUTLINE);
+        g.draw(self);
+    }
 }

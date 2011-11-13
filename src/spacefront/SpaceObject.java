@@ -1,5 +1,6 @@
 package spacefront;
 
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -66,6 +67,8 @@ public abstract class SpaceObject {
         at.rotate(a);
         return at.createTransformedShape(shape);
     }
+
+    public abstract void paint(Graphics2D g);
 
     public void setShape(Shape shape) {
         this.shape = shape;

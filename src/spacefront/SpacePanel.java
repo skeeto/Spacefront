@@ -20,9 +20,6 @@ public class SpacePanel extends JComponent implements Observer {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Color METEOROID_FILL = Color.DARK_GRAY;
-    private static final Color METEOROID_OUTLINE = Color.LIGHT_GRAY;
-
     private static final int STAR_COUNT = 100;
     private static final Color[] STAR_COLORS = {
         Color.WHITE, Color.GRAY, Color.LIGHT_GRAY
@@ -81,25 +78,20 @@ public class SpacePanel extends JComponent implements Observer {
         space.getHome().paint((Graphics2D) g.create());
 
         /* Draw rounds fired by the player. */
-        g.setColor(Color.RED);
         for (Shot s : space.getShots()) {
-            g.fill(s.get());
+            s.paint(g);
         }
 
-        /* Draw the debirs. */
         g.setStroke(new BasicStroke(2));
+
+        /* Draw the debris. */
         for (Debris d : space.getDebris()) {
-            g.setColor(derive(METEOROID_OUTLINE, d.getTTL()));
-            g.draw(d.get());
+            d.paint(g);
         }
 
         /* Draw the meteoroids. */
-        g.setColor(Color.WHITE);
         for (Meteoroid m : space.getMeteoroids()) {
-            g.setColor(METEOROID_FILL);
-            g.fill(m.get());
-            g.setColor(METEOROID_OUTLINE);
-            g.draw(m.get());
+            m.paint(g);
         }
 
         /* Draw the title screen. */
@@ -131,13 +123,6 @@ public class SpacePanel extends JComponent implements Observer {
         Rectangle2D rect = fm.getStringBounds(title, g);
         g.drawString(title,
                      getWidth() / 2 - (int) rect.getWidth() / 2, y);
-    }
-
-    private Color derive(Color c, float alpha) {
-        return new Color(c.getRed() / 255f,
-                         c.getGreen() / 255f,
-                         c.getBlue() / 255f,
-                         alpha);
     }
 
     private void paintStars(Graphics g) {

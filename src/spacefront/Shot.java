@@ -1,5 +1,7 @@
 package spacefront;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -30,5 +32,10 @@ public class Shot extends SpaceObject {
             }
         }
         return null;
+    }
+
+    public void paint(Graphics2D g) {
+        g.setColor(Color.RED);
+        g.fill(get());
     }
 }

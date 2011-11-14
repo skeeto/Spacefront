@@ -1,6 +1,8 @@
 package spacefront;
 
-public class Research {
+import java.util.Observable;
+
+public class Research extends Observable {
 
     public static final int OFFENSE = 0;
     public static final int DEFENSE = 1;
@@ -17,7 +19,12 @@ public class Research {
     }
 
     public void step() {
+        int orig = getLevel(focus);
         research[focus] += RATE;
+        if (getLevel(focus) > orig) {
+            setChanged();
+            notifyObservers();
+        }
     }
 
     private double getRawLevel(int target) {

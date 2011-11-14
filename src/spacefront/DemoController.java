@@ -1,5 +1,6 @@
 package spacefront;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,10 +9,13 @@ public class DemoController extends TimerTask {
 
     private static final Random RNG = new Random();
     private static final long DELAY = 100l;
+    private static final long WEAPON_TIME = 5000l;
 
     private final Spacefront space;
     private final double accuracy;
     private final Timer timer = new Timer();
+
+    private long lastWeaponChange = System.currentTimeMillis();
 
     public DemoController(Spacefront spacefront, double accuracy) {
         this.space = spacefront;
@@ -40,6 +44,13 @@ public class DemoController extends TimerTask {
             space.fireXY(Math.cos(a) * d, Math.sin(a) * d);
         } else {
             space.fire(false);
+        }
+
+        long now = System.currentTimeMillis();
+        if (now - lastWeaponChange > WEAPON_TIME) {
+            List<Weapon> weapons = space.getWeapons();
+            space.selectWeapon(weapons.get(RNG.nextInt(weapons.size())));
+            lastWeaponChange = now;
         }
     }
 

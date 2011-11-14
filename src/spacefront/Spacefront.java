@@ -101,6 +101,7 @@ public class Spacefront extends Observable implements Runnable, Observer {
                     if (m.step(home)) {
                         dead.add(m);
                         home.absorb(m);
+                        m.setAlive(false);
                     }
                 }
 
@@ -111,6 +112,8 @@ public class Spacefront extends Observable implements Runnable, Observer {
                     if (m != null && !dead.contains(m)) {
                         dead.add(m);
                         spent.add(s);
+                        m.setAlive(false);
+                        s.setAlive(false);
                         debris.addAll(m.breakup());
                         score += m.getSize();
                     } else if (s.getDistance() > SIDE) {

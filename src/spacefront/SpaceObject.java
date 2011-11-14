@@ -14,6 +14,8 @@ public abstract class SpaceObject {
     /** The default object shape. */
     private static final Shape DEFAULT = new Ellipse2D.Double(-5, -5, 10, 10);
 
+    private boolean alive = true;
+
     /** This object's shape. */
     private Shape shape = DEFAULT;
 
@@ -158,4 +160,20 @@ public abstract class SpaceObject {
      * @param g  the graphics context to be painted to
      */
     public abstract void paint(Graphics2D g);
+
+    /**
+     * Get object's living status.
+     * @return true if this object is alive and active
+     */
+    public boolean isAlive() {
+        return alive;
+    }
+
+    /**
+     * Set object's living status.
+     * @param set  the new living status
+     */
+    public void setAlive(boolean set) {
+        alive = set;
+    }
 }

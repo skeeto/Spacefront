@@ -121,6 +121,12 @@ public abstract class SpaceObject {
      * @return the angle
      */
     public double getA() {
+        while (a > Math.PI) {
+            a -= Math.PI * 2;
+        }
+        while (a < -Math.PI) {
+            a += Math.PI * 2;
+        }
         return a;
     }
 

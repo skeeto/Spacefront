@@ -35,7 +35,7 @@ public class SpacePanel extends JComponent implements Observer {
         = new Rectangle2D.Double(0, 0, 100, 3);
     private static final Rectangle2D WEAPON =
         new Rectangle2D.Double(0, 0, 30, 30);
-    private static final int WEAPON_PAD = 15;
+    private static final int WEAPON_PAD = 5;
 
     private Spacefront space;
     private int starseed = (int) (Math.random() * 100);

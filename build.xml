@@ -73,7 +73,6 @@
       <arg value="--mode=java"/>
       <arg value="--suffix=none"/>
       <fileset dir="${src.dir}" includes="**/*.java"/>
-      <fileset dir="${test.dir}" includes="**/*.java"/>
     </apply>
   </target>
 

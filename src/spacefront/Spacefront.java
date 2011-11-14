@@ -25,6 +25,7 @@ public class Spacefront extends Observable implements Runnable {
         new ConcurrentLinkedQueue<SpaceObject>();
 
     private Planet home = new Planet();
+    private double score = 0;
 
     private Weapon weapon = new BasicWeapon();
     private long lastFire;
@@ -84,21 +85,22 @@ public class Spacefront extends Observable implements Runnable {
                         home.absorb(m);
                     }
                 }
-                meteoroids.removeAll(dead);
 
                 /* Step weapon shots forward. */
                 Set<Shot> spent = new HashSet<Shot>();
                 for (Shot s : shots) {
                     Meteoroid m = s.step(this);
-                    if (m != null) {
+                    if (m != null && !dead.contains(m)) {
                         dead.add(m);
                         spent.add(s);
                         debris.addAll(m.breakup());
+                        score += m.getSize();
                     } else if (s.getDistance() > SIDE) {
                         spent.add(s);
                     }
                 }
                 shots.removeAll(spent);
+                meteoroids.removeAll(dead);
 
                 /* Manage incoming and outgoing objects. */
                 while (outgoing.peek() != null) {
@@ -190,5 +192,9 @@ public class Spacefront extends Observable implements Runnable {
 
     public boolean isRunning() {
         return running;
+    }
+
+    public double getScore() {
+        return score;
     }
 }

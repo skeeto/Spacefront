@@ -43,6 +43,18 @@ public abstract class SpaceObject {
     }
 
     /**
+     * Set this object's position.
+     * @param x  x-position
+     * @param y  y-position
+     * @param a  angle
+     */
+    public void setPosition(double x, double y, double a) {
+        this.x = x;
+        this.y = y;
+        this.a = a;
+    }
+
+    /**
      * Set this object's speeds.
      * @param dx  speed in x
      * @param dy  speed in y

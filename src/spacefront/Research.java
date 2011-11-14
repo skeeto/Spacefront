@@ -7,6 +7,7 @@ public class Research extends Observable {
     public static final int OFFENSE = 0;
     public static final int DEFENSE = 1;
 
+    public static final int MAX = 9;
     private static final double RATE = 0.001;
     private static final double CURVE = 2;
 
@@ -21,9 +22,12 @@ public class Research extends Observable {
     public void step() {
         int orig = getLevel(focus);
         research[focus] += RATE;
+        if (Math.pow(research[focus], 1d / CURVE) > MAX) {
+            research[focus] = Math.pow(MAX, CURVE);
+        }
         if (getLevel(focus) > orig) {
             setChanged();
-            notifyObservers();
+            notifyObservers(new Event(focus, orig + 1));
         }
     }
 
@@ -48,5 +52,35 @@ public class Research extends Observable {
             throw new IllegalArgumentException("Bad focus: " + target);
         }
         return target;
+    }
+
+    public static class Event {
+
+        private final int focus;
+        private final int level;
+
+        public Event(int focus, int level) {
+            this.focus = focus;
+            this.level = level;
+        }
+
+        public int getFocus() {
+            return focus;
+        }
+
+        public int getLevel() {
+            return level;
+        }
+
+        @Override
+        public String toString() {
+            String name;
+            if (focus == OFFENSE) {
+                name = "OFFENCE";
+            } else {
+                name = "DEFENSE";
+            }
+            return "[" + name + ": " + level + "]";
+        }
     }
 }

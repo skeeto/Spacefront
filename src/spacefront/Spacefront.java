@@ -52,12 +52,16 @@ public class Spacefront extends Observable implements Runnable {
                 }
 
                 danger += difficulty;
-                if (RNG.nextFloat() < danger) {
-                    double d = SIDE / 2d * Math.sqrt(2);
-                    double a = RNG.nextDouble() * Math.PI * 2;
-                    double x = Math.cos(a) * d;
-                    double y = Math.sin(a) * d;
-                    meteoroids.add(new Meteoroid(x, y));
+                double spawn = danger;
+                while (spawn > 0) {
+                    if (RNG.nextFloat() < danger) {
+                        double d = SIDE / 2d * Math.sqrt(2);
+                        double a = RNG.nextDouble() * Math.PI * 2;
+                        double x = Math.cos(a) * d;
+                        double y = Math.sin(a) * d;
+                        meteoroids.add(new Meteoroid(x, y));
+                    }
+                    spawn -= 1d;
                 }
                 Set<Meteoroid> dead = new HashSet<Meteoroid>();
                 Set<Shot> spent = new HashSet<Shot>();

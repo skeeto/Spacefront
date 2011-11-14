@@ -15,8 +15,6 @@ public class Spacefront extends Observable implements Runnable {
     private static final int SIDE = 600;
     private static final Dimension SIZE = new Dimension(SIDE, SIDE);
 
-    private static final long FIRE_DELAY = 200;
-
     private Set<Meteoroid> meteoroids = new HashSet<Meteoroid>();
     private Set<Shot> shots = new HashSet<Shot>();
     private Set<Debris> debris = new HashSet<Debris>();
@@ -47,7 +45,7 @@ public class Spacefront extends Observable implements Runnable {
                 if (firing) {
                     long now = System.currentTimeMillis();
                     long diff = now - lastFire;
-                    if (diff >= FIRE_DELAY) {
+                    if (diff >= weapon.getSpeed()) {
                         shots.add(weapon.fire(fireX, fireY));
                         lastFire = now;
                     }

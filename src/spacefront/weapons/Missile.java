@@ -1,0 +1,90 @@
+package spacefront.weapons;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+import spacefront.Meteoroid;
+import spacefront.Shot;
+import spacefront.Spacefront;
+
+public class Missile extends Shot {
+
+    private static final double SPEED = BasicShot.SPEED * 0.7;
+    private static final double TURN_RATE = 0.1;
+    private static final double HOMING_DISTANCE = 200;
+    public static final Color COLOR = new Color(66, 224, 157);
+    private static final double LENGTH = 12;
+    private static final double WIDTH = 3;
+    public static final Shape SHAPE =
+        new Rectangle2D.Double(-LENGTH / 2, -WIDTH / 2, LENGTH, WIDTH);
+
+    private double targetX;
+    private double targetY;
+    private Meteoroid target;
+
+    public Missile(double startx, double starty, double destx, double desty) {
+        super(SPEED, startx, starty, destx, desty);
+        setPosition(getX(), getY(), Math.atan2(desty, destx));
+        setShape(SHAPE);
+        targetX = destx;
+        targetY = desty;
+    }
+
+    @Override
+    public Meteoroid step(Spacefront space) {
+        if (space == null) {
+            return null;
+        }
+        if (target != null && !target.isAlive()) {
+            target = null;
+        }
+        if (target == null) {
+            double best = HOMING_DISTANCE * HOMING_DISTANCE;
+            for (Meteoroid m : space.getMeteoroids()) {
+                double x = targetX - m.getX();
+                double y = targetY - m.getY();
+                double d = x * x + y * y;
+                if (d < best) {
+                    target = m;
+                    best = d;
+                }
+            }
+        }
+
+        /* Target position and angle. */
+        double tx = targetX;
+        double ty = targetY;
+        if (target != null) {
+            tx = target.getX();
+            ty = target.getY();
+        }
+        double ta = Math.atan2(ty - getY(), tx - getX());
+
+        /* Behave like a missle. */
+        double a = getA();
+        double dx = Math.cos(a) * SPEED;
+        double dy = Math.sin(a) * SPEED;
+
+        /* Turn at the target. */
+        double da = ta - a;
+        if (da > Math.PI) {
+            da -= Math.PI * 2;
+        } else if (da < -Math.PI) {
+            da += Math.PI * 2;
+        }
+        if (da > TURN_RATE) {
+            da = TURN_RATE;
+        } else if (da < -TURN_RATE) {
+            da = -TURN_RATE;
+        }
+
+        setSpeed(dx, dy, da);
+        return super.step(space);
+    }
+
+    public void paint(Graphics2D g) {
+        g.setColor(COLOR);
+        g.fill(get());
+    }
+}

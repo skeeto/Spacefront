@@ -236,6 +236,10 @@ public class Spacefront extends Observable implements Runnable, Observer {
             case 1:
                 messages.write("Level up: new weapon!");
                 messages.write("Press number keys to select your weapon.");
+                weapons.add(new spacefront.weapons.MissileWeapon());
+                break;
+            case 2:
+                messages.write("Level up: new weapon!");
                 weapons.add(new spacefront.weapons.GrenadeWeapon());
                 break;
             }

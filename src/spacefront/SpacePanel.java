@@ -169,14 +169,15 @@ public class SpacePanel extends JComponent implements Observer {
         int actualy;
         if (valign == CENTER) {
             actualy = y - (int) rect.getHeight() / 2;
-        } else if (valign == TOP) {
-            actualy = y;
         } else if (valign == BOTTOM) {
-            actualy = y - (int) rect.getHeight();
+            actualy = y;
+        } else if (valign == TOP) {
+            actualy = y + (int) rect.getHeight();
         } else {
             throw new IllegalArgumentException("Bad align value: " + valign);
         }
-        g.drawString(text, actualx, y);
+        actualy -= fm.getDescent();
+        g.drawString(text, actualx, actualy);
     }
 
     private void paintStars(Graphics g) {

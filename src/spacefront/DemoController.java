@@ -46,6 +46,17 @@ public class DemoController extends TimerTask {
             space.fire(false);
         }
 
+        /* Occasionally select research. */
+        if (RNG.nextDouble() < 0.1) {
+            Research r = space.getResearch();
+            if (r.getLevel(Research.OFFENSE) > r.getLevel(Research.DEFENSE)) {
+                r.setFocus(Research.DEFENSE);
+            } else {
+                r.setFocus(Research.OFFENSE);
+            }
+        }
+
+        /* Select weapon randomly. */
         long now = System.currentTimeMillis();
         if (now - lastWeaponChange > WEAPON_TIME) {
             List<Weapon> weapons = space.getWeapons();

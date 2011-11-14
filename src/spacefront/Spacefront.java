@@ -43,7 +43,8 @@ public class Spacefront extends Observable implements Runnable {
     @Override
     public void run() {
         running = true;
-        messages.write("Defend your home planet!", 1000);
+        messages.write("Defend your home planet!", 500);
+        messages.write("Press O and D to set research focus.", 600);
         while (running) {
             synchronized (this) {
                 research.step();

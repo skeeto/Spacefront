@@ -1,10 +1,13 @@
 package spacefront;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-public class Controller implements MouseListener, MouseMotionListener {
+public class Controller
+    implements KeyListener, MouseListener, MouseMotionListener {
 
     private Spacefront space;
     private SpacePanel panel;
@@ -14,6 +17,8 @@ public class Controller implements MouseListener, MouseMotionListener {
         this.panel = panel;
         panel.addMouseListener(this);
         panel.addMouseMotionListener(this);
+        panel.addKeyListener(this);
+        panel.requestFocusInWindow();
     }
 
     @Override
@@ -53,4 +58,22 @@ public class Controller implements MouseListener, MouseMotionListener {
         double y = e.getY() - panel.getHeight() / 2;
         space.fireXY(x, y);
     }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        switch (e.getKeyChar()) {
+        case 'o':
+            space.getResearch().setFocus(Research.OFFENSE);
+            break;
+        case 'd':
+            space.getResearch().setFocus(Research.DEFENSE);
+            break;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e) {}
 }

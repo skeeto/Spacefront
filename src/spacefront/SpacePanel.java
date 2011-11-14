@@ -121,7 +121,7 @@ public class SpacePanel extends JComponent implements Observer {
     }
 
     private void paintMessages(Graphics2D g) {
-        Font font = g.getFont().deriveFont(35f);
+        Font font = g.getFont().deriveFont(30f);
         g.setFont(font);
         Messages messages = space.getMessageHandler();
         String msg = messages.getMessage();

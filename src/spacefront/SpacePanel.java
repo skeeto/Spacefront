@@ -29,15 +29,13 @@ public class SpacePanel extends JComponent implements Observer {
     };
 
     private static final int EDGE_PAD = 10;
+    private static final Color HUD_BACK = new Color(25, 95, 184, 127);
+    private static final Color HUD_FRONT = new Color(123, 169, 226);
     private static final Rectangle2D RESEARCH
         = new Rectangle2D.Double(0, 0, 100, 3);
-    private static final Color RESEARCH_BACK = Color.GRAY;
-    private static final Color RESEARCH_FRONT = Color.WHITE;
     private static final Rectangle2D WEAPON =
         new Rectangle2D.Double(0, 0, 30, 30);
     private static final int WEAPON_PAD = 15;
-    private static final Color WEAPON_BACK = Color.BLACK;
-    private static final Color WEAPON_FRONT = Color.LIGHT_GRAY;
 
     private Spacefront space;
     private int starseed = (int) (Math.random() * 100);
@@ -110,12 +108,10 @@ public class SpacePanel extends JComponent implements Observer {
 
         /* Score */
         g.setTransform(original);
-        g.setColor(Color.WHITE);
-        if (!showTitle) {
-            long score = (long) space.getScore();
-            paintText(g, "Score: " + score, RIGHT, TOP,
-                      getWidth() - EDGE_PAD, EDGE_PAD);
-        }
+        g.setColor(HUD_FRONT);
+        long score = (long) space.getScore();
+        paintText(g, "Score: " + score, RIGHT, TOP,
+                  getWidth() - EDGE_PAD, EDGE_PAD);
 
         /* Research */
         paintResearch((Graphics2D) g.create());
@@ -225,15 +221,16 @@ public class SpacePanel extends JComponent implements Observer {
         FontMetrics fm = g.getFontMetrics();
         Rectangle2D rect = fm.getStringBounds(str, g);
 
+        g.setColor(HUD_FRONT);
         paintText(g, str, LEFT, TOP,
                   EDGE_PAD, (int) (EDGE_PAD + rect.getHeight() * pos));
         AffineTransform at = new AffineTransform();
         at.translate(65, EDGE_PAD + (rect.getHeight() / 2) -
                      (RESEARCH.getHeight() / 2) + rect.getHeight() * pos);
-        g.setColor(RESEARCH_BACK);
+        g.setColor(HUD_BACK);
         g.fill(at.createTransformedShape(RESEARCH));
         at.scale(prog, 1d);
-        g.setColor(RESEARCH_FRONT);
+        g.setColor(HUD_FRONT);
         g.fill(at.createTransformedShape(RESEARCH));
     }
 
@@ -252,9 +249,9 @@ public class SpacePanel extends JComponent implements Observer {
     }
 
     private void paintWeapon(Graphics2D g, Weapon w, Shape pos, int i) {
-        g.setColor(WEAPON_BACK);
+        g.setColor(Color.BLACK);
         g.fill(pos);
-        g.setColor(WEAPON_FRONT);
+        g.setColor(HUD_FRONT);
         g.draw(pos);
         Rectangle2D rect = pos.getBounds2D();
 

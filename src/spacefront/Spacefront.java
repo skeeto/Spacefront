@@ -1,7 +1,9 @@
 package spacefront;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Queue;
@@ -12,34 +14,42 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Spacefront extends Observable implements Runnable, Observer {
 
     private static final Random RNG = new Random();
+
+    /* Operational parameters. */
     private static final long DELAY = 33;
     private static final int SIDE = 600;
     private static final Dimension SIZE = new Dimension(SIDE, SIDE);
 
+    /* Collections */
     private Set<Meteoroid> meteoroids = new HashSet<Meteoroid>();
     private Set<Shot> shots = new HashSet<Shot>();
     private Set<Debris> debris = new HashSet<Debris>();
-
     private Queue<SpaceObject> incoming =
         new ConcurrentLinkedQueue<SpaceObject>();
     private Queue<SpaceObject> outgoing =
         new ConcurrentLinkedQueue<SpaceObject>();
 
+    /* Status info. */
     private double score = 0;
     private Planet home = new Planet();
     private Messages messages = new Messages();
     private Research research = new Research();
 
+    /* Weapon information. */
+    private List<Weapon> weapons = new ArrayList<Weapon>();
     private Weapon weapon = new BasicWeapon();
     private long lastFire;
     private boolean firing = false;
     private double fireX, fireY;
+
+    /* Running info. */
     private double danger = 0.05;
     private double difficulty = 0.00001;
     private boolean running = false;
 
     public Spacefront() {
         research.addObserver(this);
+        weapons.add(weapon);
     }
 
     @Override
@@ -222,12 +232,20 @@ public class Spacefront extends Observable implements Runnable, Observer {
             switch (event.getLevel()) {
             case 1:
                 messages.write("New weapon: grenades");
-                weapon = new GrenadeWeapon();
+                weapons.add(new GrenadeWeapon());
                 break;
             }
         } else {
             switch (event.getLevel()) {
             }
         }
+    }
+
+    public void selectWeapon(Weapon w) {
+        weapon = w;
+    }
+
+    public List<Weapon> getWeapons() {
+        return weapons;
     }
 }

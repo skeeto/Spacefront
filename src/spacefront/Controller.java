@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.List;
 
 public class Controller
     implements KeyListener, MouseListener, MouseMotionListener {
@@ -68,6 +69,19 @@ public class Controller
         case 'd':
             space.getResearch().setFocus(Research.DEFENSE);
             break;
+        default:
+            /* Try a number key. */
+            try {
+                String str = new String(new char[] {e.getKeyChar()});
+                int num = Integer.parseInt(str);
+                List<Weapon> ws = space.getWeapons();
+                Weapon w = ws.get(num - 1);
+                space.selectWeapon(w);
+            } catch (NumberFormatException exception) {
+                break;
+            } catch (IndexOutOfBoundsException exception) {
+                break;
+            }
         }
     }
 

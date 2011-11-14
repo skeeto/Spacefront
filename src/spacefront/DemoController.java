@@ -47,7 +47,7 @@ public class DemoController extends TimerTask {
         }
 
         /* Occasionally select research. */
-        if (RNG.nextDouble() < 0.1) {
+        if (RNG.nextDouble() < 0.01) {
             Research r = space.getResearch();
             if (r.getLevel(Research.OFFENSE) > r.getLevel(Research.DEFENSE)) {
                 r.setFocus(Research.DEFENSE);

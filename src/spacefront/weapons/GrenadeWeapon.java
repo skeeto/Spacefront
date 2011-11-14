@@ -1,4 +1,7 @@
-package spacefront;
+package spacefront.weapons;
+
+import spacefront.Shot;
+import spacefront.Weapon;
 
 public class GrenadeWeapon implements Weapon {
 

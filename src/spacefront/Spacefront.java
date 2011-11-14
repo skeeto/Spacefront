@@ -37,7 +37,7 @@ public class Spacefront extends Observable implements Runnable, Observer {
 
     /* Weapon information. */
     private List<Weapon> weapons = new ArrayList<Weapon>();
-    private Weapon weapon = new BasicWeapon();
+    private Weapon weapon = new spacefront.weapons.BasicWeapon();
     private long lastFire;
     private boolean firing = false;
     private double fireX, fireY;
@@ -233,7 +233,7 @@ public class Spacefront extends Observable implements Runnable, Observer {
             case 1:
                 messages.write("Level up: new weapon!");
                 messages.write("Press number keys to select your weapon.");
-                weapons.add(new GrenadeWeapon());
+                weapons.add(new spacefront.weapons.GrenadeWeapon());
                 break;
             }
         } else {

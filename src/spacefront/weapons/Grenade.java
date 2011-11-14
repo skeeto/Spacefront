@@ -1,10 +1,13 @@
-package spacefront;
+package spacefront.weapons;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
+import spacefront.Meteoroid;
+import spacefront.Shot;
+import spacefront.Spacefront;
 
 public class Grenade extends Shot {
 

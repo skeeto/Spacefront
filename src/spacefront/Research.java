@@ -6,6 +6,7 @@ public class Research {
     public static final int DEFENSE = 1;
 
     private static final double RATE = 0.001;
+    private static final double CURVE = 2;
 
     private double[] research = new double[2];
     private double defense;
@@ -16,15 +17,23 @@ public class Research {
     }
 
     public void step() {
-        research[focus] += RATE * 4;
+        research[focus] += RATE;
+    }
+
+    private double getRawLevel(int target) {
+        return Math.pow(research[check(target)], 1d / CURVE);
     }
 
     public int getLevel(int target) {
-        return (int) research[check(target)];
+        return (int) getRawLevel(target);
     }
 
     public double getProgress(int target) {
-        return research[check(target)] - getLevel(target);
+        int base = getLevel(target);
+        double low = Math.pow(base, CURVE);
+        double current = research[target];
+        double high = Math.pow(base + 1, CURVE);
+        return (current - low) / (high - low);
     }
 
     private int check(int target) {

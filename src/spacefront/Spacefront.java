@@ -232,6 +232,7 @@ public class Spacefront extends Observable implements Runnable, Observer {
             switch (event.getLevel()) {
             case 1:
                 messages.write("New weapon: grenades");
+                messages.write("Press number keys to select your weapon.");
                 weapons.add(new GrenadeWeapon());
                 break;
             }

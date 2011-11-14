@@ -11,6 +11,9 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -30,6 +33,11 @@ public class SpacePanel extends JComponent implements Observer {
         = new Rectangle2D.Double(0, 0, 100, 3);
     private static final Color RESEARCH_BACK = Color.GRAY;
     private static final Color RESEARCH_FRONT = Color.WHITE;
+    private static final Rectangle2D WEAPON =
+        new Rectangle2D.Double(0, 0, 30, 30);
+    private static final int WEAPON_PAD = 15;
+    private static final Color WEAPON_BACK = Color.BLACK;
+    private static final Color WEAPON_FRONT = Color.LIGHT_GRAY;
 
     private Spacefront space;
     private int starseed = (int) (Math.random() * 100);
@@ -111,6 +119,9 @@ public class SpacePanel extends JComponent implements Observer {
 
         /* Research */
         paintResearch((Graphics2D) g.create());
+
+        /* Weapon selector. */
+        paintWeapons(g);
 
         /* Draw the title screen. */
         if (showTitle) {
@@ -224,5 +235,44 @@ public class SpacePanel extends JComponent implements Observer {
         at.scale(prog, 1d);
         g.setColor(RESEARCH_FRONT);
         g.fill(at.createTransformedShape(RESEARCH));
+    }
+
+    private Map<Weapon, Shot> weaponMap = new HashMap<Weapon, Shot>();
+
+    private void paintWeapons(Graphics2D g) {
+        List<Weapon> weapons = space.getWeapons();
+        AffineTransform at = new AffineTransform();
+        int width = (int) (WEAPON_PAD + WEAPON.getWidth());
+        for (int i = 0; i < weapons.size(); i++) {
+            at.setToTranslation(EDGE_PAD + width * i,
+                                getHeight() - EDGE_PAD - WEAPON.getHeight());
+            paintWeapon((Graphics2D) g.create(), weapons.get(i),
+                        at.createTransformedShape(WEAPON), i + 1);
+        }
+    }
+
+    private void paintWeapon(Graphics2D g, Weapon w, Shape pos, int i) {
+        g.setColor(WEAPON_BACK);
+        g.fill(pos);
+        g.setColor(WEAPON_FRONT);
+        g.draw(pos);
+        Rectangle2D rect = pos.getBounds2D();
+
+        /* Paint the numbers. */
+        g.setColor(Color.WHITE);
+        paintText(g, "" + i, LEFT, TOP,
+                  (int) rect.getX() + 2,
+                  (int) rect.getY() + 2);
+
+        /* Paint the shot. */
+        Shot shot = weaponMap.get(w);
+        if (shot == null) {
+            shot = w.fire(1, 1);
+            weaponMap.put(w, shot);
+        }
+        g.translate(rect.getCenterX() - shot.getX(),
+                    rect.getCenterY() - shot.getY());
+        shot.paint(g);
+        shot.step(null);
     }
 }

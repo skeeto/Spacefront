@@ -37,6 +37,9 @@ public class Grenade extends Shot {
 
     public Meteoroid step(Spacefront universe) {
         Meteoroid hit = super.step(universe);
+        if (universe == null) {
+            return null;
+        }
         double dx = getX() - explodeX;
         double dy = getY() - explodeY;
         double offset = RNG.nextDouble() * Math.PI;

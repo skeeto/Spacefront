@@ -42,6 +42,7 @@ public class Spacefront extends Observable implements Runnable {
         running = true;
         while (running) {
             synchronized (this) {
+                /* Shoot the weapon. */
                 if (firing) {
                     long now = System.currentTimeMillis();
                     long diff = now - lastFire;
@@ -51,6 +52,7 @@ public class Spacefront extends Observable implements Runnable {
                     }
                 }
 
+                /* Spawn meteoroids. */
                 danger += difficulty;
                 double spawn = danger;
                 while (spawn > 0) {
@@ -63,8 +65,8 @@ public class Spacefront extends Observable implements Runnable {
                     }
                     spawn -= 1d;
                 }
-                Set<Meteoroid> dead = new HashSet<Meteoroid>();
-                Set<Shot> spent = new HashSet<Shot>();
+
+                /* Step debris forward. */
                 Set<Debris> old = new HashSet<Debris>();
                 for (Debris d : debris) {
                     d.step();
@@ -72,12 +74,20 @@ public class Spacefront extends Observable implements Runnable {
                         old.add(d);
                     }
                 }
+                debris.removeAll(old);
+
+                /* Step meteoroids forward. */
+                Set<Meteoroid> dead = new HashSet<Meteoroid>();
                 for (Meteoroid m : meteoroids) {
                     if (m.step(home)) {
                         dead.add(m);
                         home.absorb(m);
                     }
                 }
+                meteoroids.removeAll(dead);
+
+                /* Step weapon shots forward. */
+                Set<Shot> spent = new HashSet<Shot>();
                 for (Shot s : shots) {
                     Meteoroid m = s.step(this);
                     if (m != null) {
@@ -88,9 +98,9 @@ public class Spacefront extends Observable implements Runnable {
                         spent.add(s);
                     }
                 }
-                meteoroids.removeAll(dead);
                 shots.removeAll(spent);
-                debris.removeAll(old);
+
+                /* Manage incoming and outgoing objects. */
                 while (outgoing.peek() != null) {
                     SpaceObject o = outgoing.poll();
                     if (o instanceof Shot) {
@@ -111,6 +121,8 @@ public class Spacefront extends Observable implements Runnable {
                         debris.add((Debris) o);
                     }
                 }
+
+                /* Check game over status. */
                 if (home.getHealth() <= 0) {
                     System.out.println("Game over");
                     running = false;

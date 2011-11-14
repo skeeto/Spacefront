@@ -26,6 +26,7 @@ public class Spacefront extends Observable implements Runnable {
 
     private Planet home = new Planet();
     private double score = 0;
+    private Messages messages = new Messages();
 
     private Weapon weapon = new BasicWeapon();
     private long lastFire;
@@ -41,6 +42,7 @@ public class Spacefront extends Observable implements Runnable {
     @Override
     public void run() {
         running = true;
+        messages.write("Defend your home planet!");
         while (running) {
             synchronized (this) {
                 /* Shoot the weapon. */
@@ -196,5 +198,9 @@ public class Spacefront extends Observable implements Runnable {
 
     public double getScore() {
         return score;
+    }
+
+    public Messages getMessageHandler() {
+        return messages;
     }
 }

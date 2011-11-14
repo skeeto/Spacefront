@@ -113,6 +113,24 @@ public class SpacePanel extends JComponent implements Observer {
             g.setFont(g.getFont().deriveFont(Font.BOLD, 50f));
             paintText(g, "Game Over", CENTER, CENTER, getWidth() / 2, 200);
         }
+
+        /* Display messages. */
+        if (!showTitle) {
+            paintMessages(g);
+        }
+    }
+
+    private void paintMessages(Graphics2D g) {
+        Font font = g.getFont().deriveFont(35f);
+        g.setFont(font);
+        Messages messages = space.getMessageHandler();
+        String msg = messages.getMessage();
+        float age = messages.getAge();
+        if (msg != null && age >= 0) {
+            g.setColor(new Color(1f, 1f, 1f, 1f - age));
+            paintText(g, msg, CENTER, TOP,
+                      getWidth() / 2, getHeight() / 2 + 100);
+        }
     }
 
     private void paintTitle(Graphics2D g) {

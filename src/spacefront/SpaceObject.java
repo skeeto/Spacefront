@@ -103,6 +103,14 @@ public abstract class SpaceObject {
     }
 
     /**
+     * Get the angle of this object.
+     * @return the angle
+     */
+    public double getA() {
+        return a;
+    }
+
+    /**
      * Get the distance of this object from the player.
      * @return the distance of this shape from the origin
      */

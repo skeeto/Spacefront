@@ -39,9 +39,10 @@ public class Grenade extends Shot {
         Meteoroid hit = super.step(universe);
         double dx = getX() - explodeX;
         double dy = getY() - explodeY;
+        double offset = RNG.nextDouble() * Math.PI;
         if (hit != null || (dx * dx + dy * dy) < THRESHOLD) {
             for (int i = 0; i < COUNT; i++) {
-                double a = i * (Math.PI * 2d / COUNT) + RNG.nextDouble();
+                double a = i * (Math.PI * 2d / COUNT) + offset;
                 double x = Math.cos(a) + getX();
                 double y = Math.sin(a) + getY();
                 Shot s = new BasicShot(getX(), getY(), x, y);

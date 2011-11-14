@@ -24,9 +24,10 @@ public class Spacefront extends Observable implements Runnable {
     private Queue<SpaceObject> outgoing =
         new ConcurrentLinkedQueue<SpaceObject>();
 
-    private Planet home = new Planet();
     private double score = 0;
+    private Planet home = new Planet();
     private Messages messages = new Messages();
+    private Research research = new Research();
 
     private Weapon weapon = new BasicWeapon();
     private long lastFire;
@@ -45,6 +46,8 @@ public class Spacefront extends Observable implements Runnable {
         messages.write("Defend your home planet!", 1000);
         while (running) {
             synchronized (this) {
+                research.step();
+
                 /* Shoot the weapon. */
                 if (firing) {
                     long now = System.currentTimeMillis();
@@ -202,5 +205,9 @@ public class Spacefront extends Observable implements Runnable {
 
     public Messages getMessageHandler() {
         return messages;
+    }
+
+    public Research getResearch() {
+        return research;
     }
 }

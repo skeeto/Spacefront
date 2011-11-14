@@ -25,7 +25,11 @@ public class SpacePanel extends JComponent implements Observer {
         Color.WHITE, Color.GRAY, Color.LIGHT_GRAY
     };
 
-    private static final int EDGE_PAD = 20;
+    private static final int EDGE_PAD = 10;
+    private static final Rectangle2D RESEARCH
+        = new Rectangle2D.Double(0, 0, 100, 3);
+    private static final Color RESEARCH_BACK = Color.GRAY;
+    private static final Color RESEARCH_FRONT = Color.WHITE;
 
     private Spacefront space;
     private int starseed = (int) (Math.random() * 100);
@@ -99,11 +103,14 @@ public class SpacePanel extends JComponent implements Observer {
         /* Score */
         g.setTransform(original);
         g.setColor(Color.WHITE);
-        if (true && !showTitle) {
+        if (!showTitle) {
             long score = (long) space.getScore();
             paintText(g, "Score: " + score, RIGHT, TOP,
                       getWidth() - EDGE_PAD, EDGE_PAD);
         }
+
+        /* Research */
+        paintResearch((Graphics2D) g.create());
 
         /* Draw the title screen. */
         if (showTitle) {
@@ -188,5 +195,34 @@ public class SpacePanel extends JComponent implements Observer {
             g.setColor(STAR_COLORS[stars.nextInt(STAR_COLORS.length)]);
             g.drawLine(x, y, x, y);
         }
+    }
+
+    private void paintResearch(Graphics2D g) {
+        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 12));
+        paintResearchBar(g, Research.OFFENSE, "Olvl ", 0);
+        paintResearchBar(g, Research.DEFENSE, "Dlvl ", 1);
+    }
+
+    private void paintResearchBar(Graphics2D g, int focus, String pre,
+                                  int pos) {
+        Research r = space.getResearch();
+        int level = r.getLevel(focus) + 1;
+        double prog = r.getProgress(focus);
+
+        /* String metrics */
+        String str = pre + level;
+        FontMetrics fm = g.getFontMetrics();
+        Rectangle2D rect = fm.getStringBounds(str, g);
+
+        paintText(g, str, LEFT, TOP,
+                  EDGE_PAD, (int) (EDGE_PAD + rect.getHeight() * pos));
+        AffineTransform at = new AffineTransform();
+        at.translate(65, EDGE_PAD + (rect.getHeight() / 2) -
+                     (RESEARCH.getHeight() / 2) + rect.getHeight() * pos);
+        g.setColor(RESEARCH_BACK);
+        g.fill(at.createTransformedShape(RESEARCH));
+        at.scale(prog, 1d);
+        g.setColor(RESEARCH_FRONT);
+        g.fill(at.createTransformedShape(RESEARCH));
     }
 }

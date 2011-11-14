@@ -16,6 +16,8 @@ public class Planet {
     private static final Color LAND_COLOR = new Color(0f, 0.7f, 0f);
     private static final Color CLOUD_COLOR = new Color(1f, 1f, 1f, 0.75f);
 
+    private static double SPIN_RATE = 6000d;
+
     private static final double DEAD_MASS = 300 * 300 * Math.PI;
     private double mass = 2500;
     private float health = 1f;
@@ -80,6 +82,8 @@ public class Planet {
     }
 
     public void paint(Graphics2D g) {
+        long time = System.currentTimeMillis();
+        g.rotate(time / SPIN_RATE);
         double r = getRadius();
         AffineTransform at = AffineTransform.getScaleInstance(r, r);
         Shape clip = at.createTransformedShape(base);

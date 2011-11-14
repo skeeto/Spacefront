@@ -3,12 +3,13 @@ package spacefront;
 import java.awt.Dimension;
 import java.util.HashSet;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class Spacefront extends Observable implements Runnable {
+public class Spacefront extends Observable implements Runnable, Observer {
 
     private static final Random RNG = new Random();
     private static final long DELAY = 33;
@@ -38,6 +39,7 @@ public class Spacefront extends Observable implements Runnable {
     private boolean running = false;
 
     public Spacefront() {
+        research.addObserver(this);
     }
 
     @Override
@@ -210,5 +212,22 @@ public class Spacefront extends Observable implements Runnable {
 
     public Research getResearch() {
         return research;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        /* Research level complete. */
+        Research.Event event = (Research.Event) arg;
+        if (event.getFocus() == Research.OFFENSE) {
+            switch (event.getLevel()) {
+            case 1:
+                messages.write("New weapon: grenades");
+                weapon = new GrenadeWeapon();
+                break;
+            }
+        } else {
+            switch (event.getLevel()) {
+            }
+        }
     }
 }

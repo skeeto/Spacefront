@@ -266,6 +266,10 @@ public class Spacefront extends Observable implements Runnable, Observer {
         weapon = w;
     }
 
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
     public synchronized List<Weapon> getWeapons() {
         return weapons;
     }

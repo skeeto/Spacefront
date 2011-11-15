@@ -31,6 +31,7 @@ public class SpacePanel extends JComponent implements Observer {
     private static final int EDGE_PAD = 10;
     private static final Color HUD_BACK = new Color(25, 95, 184, 127);
     private static final Color HUD_FRONT = new Color(123, 169, 226);
+    private static final Color HUD_SELECT = new Color(116, 226, 82);
     private static final Rectangle2D RESEARCH
         = new Rectangle2D.Double(0, 0, 100, 3);
     private static final Rectangle2D WEAPON =
@@ -253,17 +254,24 @@ public class SpacePanel extends JComponent implements Observer {
         AffineTransform at = new AffineTransform();
         int width = (int) (WEAPON_PAD + WEAPON.getWidth());
         for (int i = 0; i < weapons.size(); i++) {
+            Weapon w = weapons.get(i);
             at.setToTranslation(EDGE_PAD + width * i,
                                 getHeight() - EDGE_PAD - WEAPON.getHeight());
-            paintWeapon((Graphics2D) g.create(), weapons.get(i),
-                        at.createTransformedShape(WEAPON), i + 1);
+            paintWeapon((Graphics2D) g.create(), w,
+                        at.createTransformedShape(WEAPON),
+                        i + 1, space.getWeapon() == w);
         }
     }
 
-    private void paintWeapon(Graphics2D g, Weapon w, Shape pos, int i) {
+    private void paintWeapon(Graphics2D g, Weapon w, Shape pos,
+                             int i, boolean selected) {
         g.setColor(Color.BLACK);
         g.fill(pos);
-        g.setColor(HUD_FRONT);
+        if (!selected) {
+            g.setColor(HUD_FRONT);
+        } else {
+            g.setColor(HUD_SELECT);
+        }
         g.draw(pos);
         Rectangle2D rect = pos.getBounds2D();
 

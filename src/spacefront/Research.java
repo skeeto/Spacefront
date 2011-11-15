@@ -9,7 +9,7 @@ public class Research extends Observable {
 
     public static final int MAX = 9;
     private static final double RATE = 0.001;
-    private static final double CURVE = 2;
+    private static final double CURVE = 1.5;
 
     private double[] research = new double[2];
     private double defense;

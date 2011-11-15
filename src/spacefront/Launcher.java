@@ -52,6 +52,8 @@ public class Launcher implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         panel.removeMouseListener(this);
+        panel.requestFocusInWindow();
+        panel.requestFocus();
         launch();
     }
 

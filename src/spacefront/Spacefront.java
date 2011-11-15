@@ -46,6 +46,7 @@ public class Spacefront extends Observable implements Runnable, Observer {
     private double danger = 0.05;
     private double difficulty = 0.00001;
     private boolean running = false;
+    private final Thread thread = new Thread(this);
 
     public Spacefront() {
         research.addObserver(this);
@@ -57,7 +58,18 @@ public class Spacefront extends Observable implements Runnable, Observer {
         running = true;
         messages.write("Defend your home planet!", 500);
         messages.write("Press O and D to set research focus.", 600);
-        while (running) {
+        while (true) {
+            if (!running) {
+                setChanged();
+                notifyObservers();
+                try {
+                    Thread.sleep(DELAY);
+                } catch (InterruptedException e) {
+                    System.out.println("Interrupted.");
+                    return;
+                }
+                continue;
+            }
             synchronized (this) {
                 research.step();
 
@@ -156,15 +168,12 @@ public class Spacefront extends Observable implements Runnable, Observer {
             }
             setChanged();
             notifyObservers();
-            sleep(DELAY);
-        }
-    }
-
-    private void sleep(long ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            return;
+            try {
+                Thread.sleep(DELAY);
+            } catch (InterruptedException e) {
+                System.out.println("Interrupted.");
+                return;
+            }
         }
     }
 
@@ -207,8 +216,13 @@ public class Spacefront extends Observable implements Runnable, Observer {
         firing = enabled;
     }
 
+    public void start() {
+        thread.start();
+    }
+
     public void stop() {
         running = false;
+        thread.interrupt();
     }
 
     public boolean isRunning() {

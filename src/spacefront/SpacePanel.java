@@ -123,9 +123,7 @@ public class SpacePanel extends JComponent implements Observer {
         if (showTitle) {
             paintTitle(g);
         } else if (!space.isRunning()) {
-            g.setColor(Color.WHITE);
-            g.setFont(g.getFont().deriveFont(Font.BOLD, 50f));
-            paintText(g, "Game Over", CENTER, CENTER, getWidth() / 2, 200);
+            paintGameOver(g);
         }
 
         /* Display messages. */
@@ -147,17 +145,31 @@ public class SpacePanel extends JComponent implements Observer {
         }
     }
 
+    private Color getBlinkColor() {
+        long time = System.currentTimeMillis();
+        float alpha = (float) Math.abs(Math.sin(time / 512d));
+        return new Color(1f, 1f, 1f, alpha);
+    }
+
     private void paintTitle(Graphics2D g) {
         Font title = g.getFont().deriveFont(Font.BOLD, 75f);
         Font subtitle = g.getFont().deriveFont(Font.ITALIC, 50f);
         g.setColor(Color.WHITE);
         g.setFont(title);
         paintText(g, "Spacefront", CENTER, CENTER, getWidth() / 2, 200);
+        g.setColor(getBlinkColor());
         g.setFont(subtitle);
-        long time = System.currentTimeMillis();
-        float alpha = (float) Math.abs(Math.sin(time / 512d));
-        g.setColor(new Color(1f, 1f, 1f, alpha));
         paintText(g, "Click to start!", CENTER, CENTER, getWidth() / 2, 400);
+    }
+
+    private void paintGameOver(Graphics2D g) {
+        g.setColor(Color.WHITE);
+        g.setFont(g.getFont().deriveFont(Font.BOLD, 50f));
+        paintText(g, "Game Over", CENTER, CENTER, getWidth() / 2, 200);
+        g.setFont(g.getFont().deriveFont(Font.ITALIC, 30f));
+        g.setColor(getBlinkColor());
+        paintText(g, "Press R to try again", CENTER, CENTER,
+                  getWidth() / 2, 500);
     }
 
     private static final int LEFT = 0;

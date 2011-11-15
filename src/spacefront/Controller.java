@@ -69,6 +69,11 @@ public class Controller
         case 'd':
             space.getResearch().setFocus(Research.DEFENSE);
             break;
+        case 'r':
+            if (!space.isRunning()) {
+                new Launcher(panel, null).launch();
+            }
+            break;
         default:
             /* Try a number key. */
             try {

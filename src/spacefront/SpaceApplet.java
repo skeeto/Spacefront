@@ -19,7 +19,7 @@ public class SpaceApplet extends JApplet {
         /* Prepare the GUI. */
         panel = new SpacePanel(spacefront);
         add(panel);
-        new Launcher(panel, demo);
+        panel.addMouseListener(new Launcher(panel, demo));
     }
 
     @Override

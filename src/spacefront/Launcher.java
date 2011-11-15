@@ -22,7 +22,7 @@ public class Launcher implements MouseListener {
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        new Launcher(panel, demo);
+        panel.addMouseListener(new Launcher(panel, demo));
     }
 
     private DemoController demo;
@@ -31,14 +31,12 @@ public class Launcher implements MouseListener {
     public Launcher(SpacePanel panel, DemoController demo) {
         this.panel = panel;
         this.demo = demo;
-        panel.addMouseListener(this);
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        panel.removeMouseListener(this);
+    public void launch() {
         if (demo != null) {
             demo.finalize();
+            demo = null;
         }
         Spacefront game = panel.getSpacefront();
         if (game != null) {
@@ -48,7 +46,13 @@ public class Launcher implements MouseListener {
         panel.setSpacefront(game);
         panel.showTitle(false);
         new Controller(game, panel);
-        new Thread(game).start();
+        game.start();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        panel.removeMouseListener(this);
+        launch();
     }
 
     @Override

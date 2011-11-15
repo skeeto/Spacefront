@@ -27,7 +27,7 @@ public class DemoController extends TimerTask {
     public void run() {
         /* Target the nearest meteoroid. */
         Meteoroid target = null;
-        double d = Double.POSITIVE_INFINITY;
+        double d = space.getSize().getWidth() / 2;
         for (Meteoroid m : space.getMeteoroids()) {
             if (m.getDistance() < d) {
                 d = m.getDistance();

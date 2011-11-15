@@ -12,7 +12,7 @@ import spacefront.Spacefront;
 public class Missile extends Shot {
 
     public static final int HIT_MAX = 3;
-    private static final double SPEED = BasicShot.SPEED * 1.5;
+    private static final double SPEED = BasicShot.SPEED;
     private static final double TURN_RATE = 0.2;
     private static final double HOMING_DISTANCE = 200;
     public static final Color COLOR1 = new Color(113, 36, 255);

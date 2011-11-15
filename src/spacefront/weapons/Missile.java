@@ -10,25 +10,34 @@ import spacefront.Spacefront;
 
 public class Missile extends Shot {
 
-    private static final double SPEED = BasicShot.SPEED * 0.7;
-    private static final double TURN_RATE = 0.1;
+    private static final double SPEED = BasicShot.SPEED * 1.5;
+    private static final double TURN_RATE = 0.2;
     private static final double HOMING_DISTANCE = 200;
     public static final Color COLOR = new Color(66, 224, 157);
-    private static final double LENGTH = 12;
-    private static final double WIDTH = 3;
-    public static final Shape SHAPE =
-        new Rectangle2D.Double(-LENGTH / 2, -WIDTH / 2, LENGTH, WIDTH);
 
-    private double targetX;
-    private double targetY;
+    private final double targetX;
+    private final double targetY;
     private Meteoroid target;
 
     public Missile(double startx, double starty, double destx, double desty) {
         super(SPEED, startx, starty, destx, desty);
         setPosition(getX(), getY(), Math.atan2(desty, destx));
-        setShape(SHAPE);
+        setShape(MissileShape.get());
         targetX = destx;
         targetY = desty;
+    }
+
+    private void targetNearest(Spacefront space) {
+        double best = HOMING_DISTANCE * HOMING_DISTANCE;
+        for (Meteoroid m : space.getMeteoroids()) {
+            double x = targetX - m.getX();
+            double y = targetY - m.getY();
+            double d = x * x + y * y;
+            if (d < best) {
+                target = m;
+                best = d;
+            }
+        }
     }
 
     @Override
@@ -36,20 +45,9 @@ public class Missile extends Shot {
         if (space == null) {
             return null;
         }
-        if (target != null && !target.isAlive()) {
+        if (target == null || !target.isAlive()) {
             target = null;
-        }
-        if (target == null) {
-            double best = HOMING_DISTANCE * HOMING_DISTANCE;
-            for (Meteoroid m : space.getMeteoroids()) {
-                double x = targetX - m.getX();
-                double y = targetY - m.getY();
-                double d = x * x + y * y;
-                if (d < best) {
-                    target = m;
-                    best = d;
-                }
-            }
+            targetNearest(space);
         }
 
         /* Target position and angle. */

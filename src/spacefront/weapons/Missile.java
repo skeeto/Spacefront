@@ -11,6 +11,7 @@ import spacefront.Spacefront;
 
 public class Missile extends Shot {
 
+    public static final int HIT_MAX = 3;
     private static final double SPEED = BasicShot.SPEED * 1.5;
     private static final double TURN_RATE = 0.2;
     private static final double HOMING_DISTANCE = 200;
@@ -20,6 +21,7 @@ public class Missile extends Shot {
     private final double targetX;
     private final double targetY;
     private Meteoroid target;
+    private int hits = HIT_MAX;
 
     public Missile(double startx, double starty, double destx, double desty) {
         super(SPEED, startx, starty, destx, desty);
@@ -80,7 +82,13 @@ public class Missile extends Shot {
         }
 
         setSpeed(dx, dy, da);
-        return super.step(space);
+        Meteoroid m = super.step(space);
+        if (m != null) {
+            if (--hits < 1) {
+                space.removeObject(this);
+            }
+        }
+        return m;
     }
 
     public void paint(Graphics2D g) {

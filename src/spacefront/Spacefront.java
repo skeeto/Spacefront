@@ -123,7 +123,6 @@ public class Spacefront extends Observable implements Runnable, Observer {
                     Meteoroid m = s.step(this);
                     if (m != null && !dead.contains(m)) {
                         dead.add(m);
-                        spent.add(s);
                         m.setAlive(false);
                         s.setAlive(false);
                         debris.addAll(m.breakup());

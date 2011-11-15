@@ -6,7 +6,9 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.util.Set;
+import spacefront.Meteoroid;
 import spacefront.Shot;
+import spacefront.Spacefront;
 
 public class BasicShot extends Shot {
 
@@ -26,6 +28,15 @@ public class BasicShot extends Shot {
     public BasicShot(double startx, double starty, double destx, double desty) {
         super(SPEED, startx, starty, destx, desty);
         setShape(SHAPE);
+    }
+
+    @Override
+    public Meteoroid step(Spacefront space) {
+        Meteoroid m = super.step(space);
+        if (m != null) {
+            space.removeObject(this);
+        }
+        return m;
     }
 
     public void paint(Graphics2D g) {

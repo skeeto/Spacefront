@@ -3,6 +3,7 @@ package spacefront.weapons;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import spacefront.Meteoroid;
 import spacefront.Shot;
@@ -13,7 +14,8 @@ public class Missile extends Shot {
     private static final double SPEED = BasicShot.SPEED * 1.5;
     private static final double TURN_RATE = 0.2;
     private static final double HOMING_DISTANCE = 200;
-    public static final Color COLOR = new Color(66, 224, 157);
+    public static final Color COLOR1 = new Color(113, 36, 255);
+    public static final Color COLOR2 = new Color(255, 81, 241);
 
     private final double targetX;
     private final double targetY;
@@ -22,7 +24,7 @@ public class Missile extends Shot {
     public Missile(double startx, double starty, double destx, double desty) {
         super(SPEED, startx, starty, destx, desty);
         setPosition(getX(), getY(), Math.atan2(desty, destx));
-        setShape(MissileShape.get());
+        setShape(MissileShape.getHull());
         targetX = destx;
         targetY = desty;
     }
@@ -82,7 +84,10 @@ public class Missile extends Shot {
     }
 
     public void paint(Graphics2D g) {
-        g.setColor(COLOR);
-        g.fill(get());
+        AffineTransform at = getTransform();
+        g.setColor(COLOR2);
+        g.fill(at.createTransformedShape(MissileShape.getDecoration()));
+        g.setColor(COLOR1);
+        g.fill(at.createTransformedShape(MissileShape.getHull()));
     }
 }

@@ -13,14 +13,17 @@ public class MissileShape extends Path2D.Double {
     private static final Shape HULL =
         new Rectangle2D.Double(-LENGTH / 2, -WIDTH / 2, LENGTH, WIDTH);
 
-    private static final Shape SHAPE = new MissileShape();
+    private static final Shape DECORATION = new MissileShape();
 
-    public static synchronized Shape get() {
-        return SHAPE;
+    public static Shape getHull() {
+        return HULL;
+    }
+
+    public static Shape getDecoration() {
+        return DECORATION;
     }
 
     protected MissileShape() {
-        append(HULL, false);
         /* Tail */
         moveTo(-LENGTH / 2 - WIDTH, -WIDTH * 1.5);
         lineTo(-LENGTH / 2 + WIDTH * 2,  0);
